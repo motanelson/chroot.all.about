@@ -1,3 +1,1 @@
-# chroot.all.about
-
-all about chroot container
+source code of split

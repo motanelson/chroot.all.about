@@ -1,2 +1,1 @@
-source code of split
-useful if you need a version of split user define
+color drive ansi colors sys to windows 95

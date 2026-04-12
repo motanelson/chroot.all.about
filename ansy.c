@@ -4,6 +4,14 @@
 
 HANDLE hConsole;
 
+int ansi_to_win_color(int ansi_color) {
+    int r = (ansi_color >> 0) & 1; // ANSI Red
+    int g = (ansi_color >> 1) & 1; // ANSI Green
+    int b = (ansi_color >> 2) & 1; // ANSI Blue
+
+    // Win32: BGR
+    return (r << 2) | (g << 1) | (b << 0);
+}
 void set_color(int fg, int bg) {
     SetConsoleTextAttribute(hConsole, (bg << 4) | fg);
 }
@@ -18,9 +26,9 @@ void process_ansi(const char *str) {
                 int code = atoi(str);
 
                 if (code >= 30 && code <= 37)
-                    fg = code - 30;
+                    fg = ansi_to_win_color(code - 30);
                 if (code >= 40 && code <= 47)
-                    bg = code - 40;
+                    bg = ansi_to_win_color(code - 40);
 
                 while (*str && *str != ';' && *str != 'm') str++;
                 if (*str == ';') str++;

@@ -14,11 +14,19 @@ compilationUnit
 // Declarações
 // ==========================
 declaration
-    : typeSpecifier declarator ('=' expression)? ';'
+    : typeSpecifier initDeclaratorList ';'
+    ;
+
+initDeclaratorList
+    : initDeclarator (',' initDeclarator)*
+    ;
+
+initDeclarator
+    : declarator ('=' expression)?
     ;
 
 functionDeclaration
-    : typeSpecifier Identifier '(' parameterList? ')' ';'
+    : typeSpecifier qualifiedIdentifier '(' parameterList? ')' ';'
     ;
 
 typeSpecifier
@@ -34,7 +42,7 @@ declarator
 // Funções
 // ==========================
 functionDefinition
-    : typeSpecifier Identifier '(' parameterList? ')' compoundStatement
+    : typeSpecifier qualifiedIdentifier '(' parameterList? ')' compoundStatement
     ;
 
 parameterList
@@ -56,6 +64,16 @@ classMember
     : declaration
     | functionDefinition
     | functionDeclaration
+    | constructor
+    | destructor
+    ;
+
+constructor
+    : Identifier '(' parameterList? ')' compoundStatement
+    ;
+
+destructor
+    : '~' Identifier '(' parameterList? ')' compoundStatement
     ;
 
 // ==========================
@@ -95,11 +113,19 @@ jumpStatement
 // Expressões
 // ==========================
 expression
-    : assignmentExpression
+    : conditionalExpression
+    ;
+
+conditionalExpression
+    : logicalOrExpression ('?' expression ':' conditionalExpression)?
     ;
 
 assignmentExpression
-    : logicalOrExpression ('=' assignmentExpression)?
+    : logicalOrExpression (assignmentOperator assignmentExpression)?
+    ;
+
+assignmentOperator
+    : '=' | '+=' | '-=' | '*=' | '/=' | '%='
     ;
 
 logicalOrExpression
@@ -107,7 +133,19 @@ logicalOrExpression
     ;
 
 logicalAndExpression
-    : equalityExpression ('&&' equalityExpression)*
+    : bitwiseOrExpression ('&&' bitwiseOrExpression)*
+    ;
+
+bitwiseOrExpression
+    : bitwiseXorExpression ('|' bitwiseXorExpression)*
+    ;
+
+bitwiseXorExpression
+    : bitwiseAndExpression ('^' bitwiseAndExpression)*
+    ;
+
+bitwiseAndExpression
+    : equalityExpression ('&' equalityExpression)*
     ;
 
 equalityExpression
@@ -126,7 +164,9 @@ multiplicativeExpression
     : unaryExpression (('*' | '/' | '%') unaryExpression)*
     ;
 
-// 🔥 suporte completo a ++ e --
+// ==========================
+// Unary / Postfix
+// ==========================
 unaryExpression
     : ('+' | '-' | '!' | '++' | '--') unaryExpression
     | postfixExpression
@@ -136,12 +176,19 @@ postfixExpression
     : primaryExpression ('++' | '--')*
     ;
 
-// 🔥 chamadas de função + acesso a membros
+// ==========================
+// Primary
+// ==========================
 primaryExpression
-    : Identifier ('(' argumentList? ')')? ('.' Identifier)*
+    : 'this'
+    | qualifiedIdentifier ('(' argumentList? ')')? ('.' Identifier)*
     | Constant
     | StringLiteral
     | '(' expression ')'
+    ;
+
+qualifiedIdentifier
+    : Identifier ('::' Identifier)*
     ;
 
 argumentList
@@ -170,12 +217,10 @@ FloatingConstant
     : [0-9]+ '.' [0-9]* (('e' | 'E') ('+' | '-')? [0-9]+)?
     ;
 
-// 🔥 char com escape
 CharacterConstant
     : '\'' ( ~['\\] | '\\' . ) '\''
     ;
 
-// 🔥 strings
 StringLiteral
     : '"' ( ~["\\] | '\\' . )* '"'
     ;

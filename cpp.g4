@@ -5,7 +5,6 @@ grammar cpp;
 // ==========================
 compilationUnit
     : (declaration 
-     | functionDeclaration
      | functionDefinition 
      | classDefinition)* EOF
     ;
@@ -23,10 +22,6 @@ initDeclaratorList
 
 initDeclarator
     : declarator ('=' expression)?
-    ;
-
-functionDeclaration
-    : typeSpecifier qualifiedIdentifier '(' parameterList? ')' ';'
     ;
 
 typeSpecifier
@@ -63,7 +58,6 @@ classDefinition
 classMember
     : declaration
     | functionDefinition
-    | functionDeclaration
     | constructor
     | destructor
     ;
@@ -89,6 +83,7 @@ statement
     | selectionStatement
     | iterationStatement
     | jumpStatement
+    | coutStatement
     | declaration
     ;
 
@@ -109,23 +104,27 @@ jumpStatement
     : 'return' expression? ';'
     ;
 
-// ==========================
-// Expressões
-// ==========================
-expression
-    : conditionalExpression
+coutStatement
+    : 'cout' ('<<' expression)+ ';'
     ;
 
-conditionalExpression
-    : logicalOrExpression ('?' expression ':' conditionalExpression)?
+// ==========================
+// Expressões (Hierarquia de Precedência)
+// ==========================
+expression
+    : assignmentExpression
     ;
 
 assignmentExpression
-    : logicalOrExpression (assignmentOperator assignmentExpression)?
+    : conditionalExpression (assignmentOperator assignmentExpression)?
     ;
 
 assignmentOperator
     : '=' | '+=' | '-=' | '*=' | '/=' | '%='
+    ;
+
+conditionalExpression
+    : logicalOrExpression ('?' expression ':' conditionalExpression)?
     ;
 
 logicalOrExpression
@@ -133,19 +132,7 @@ logicalOrExpression
     ;
 
 logicalAndExpression
-    : bitwiseOrExpression ('&&' bitwiseOrExpression)*
-    ;
-
-bitwiseOrExpression
-    : bitwiseXorExpression ('|' bitwiseXorExpression)*
-    ;
-
-bitwiseXorExpression
-    : bitwiseAndExpression ('^' bitwiseAndExpression)*
-    ;
-
-bitwiseAndExpression
-    : equalityExpression ('&' equalityExpression)*
+    : equalityExpression ('&&' equalityExpression)*
     ;
 
 equalityExpression
@@ -164,31 +151,30 @@ multiplicativeExpression
     : unaryExpression (('*' | '/' | '%') unaryExpression)*
     ;
 
-// ==========================
-// Unary / Postfix
-// ==========================
 unaryExpression
     : ('+' | '-' | '!' | '++' | '--') unaryExpression
     | postfixExpression
     ;
 
 postfixExpression
-    : primaryExpression ('++' | '--')*
+    : primaryExpression
+    | postfixExpression '(' argumentList? ')'
+    | postfixExpression '[' expression ']'
+    | postfixExpression '.' Identifier
+    | postfixExpression '++'
+    | postfixExpression '--'
     ;
 
-// ==========================
-// Primary
-// ==========================
 primaryExpression
     : 'this'
-    | qualifiedIdentifier ('(' argumentList? ')')? ('.' Identifier)*
     | Constant
     | StringLiteral
     | '(' expression ')'
+    | qualifiedIdentifier
     ;
 
 qualifiedIdentifier
-    : Identifier ('::' Identifier)*
+    : ('::')? Identifier ('::' Identifier)*
     ;
 
 argumentList
@@ -198,44 +184,9 @@ argumentList
 // ==========================
 // Tokens Léxicos
 // ==========================
-Identifier
-    : [a-zA-Z_] [a-zA-Z0-9_]*
-    ;
-
-// Constantes
-Constant
-    : IntegerConstant
-    | FloatingConstant
-    | CharacterConstant
-    ;
-
-IntegerConstant
-    : [0-9]+
-    ;
-
-FloatingConstant
-    : [0-9]+ '.' [0-9]* (('e' | 'E') ('+' | '-')? [0-9]+)?
-    ;
-
-CharacterConstant
-    : '\'' ( ~['\\] | '\\' . ) '\''
-    ;
-
-StringLiteral
-    : '"' ( ~["\\] | '\\' . )* '"'
-    ;
-
-// ==========================
-// Espaços e comentários
-// ==========================
-Whitespace
-    : [ \t\r\n]+ -> skip
-    ;
-
-LineComment
-    : '//' ~[\r\n]* -> skip
-    ;
-
-BlockComment
-    : '/*' .*? '*/' -> skip
-    ;
+Identifier : [a-zA-Z_] [a-zA-Z0-9_]* ;
+Constant   : [0-9]+ ('.' [0-9]*)? ;
+StringLiteral : '"' ( ~["\\] | '\\' . )* '"' ;
+Whitespace : [ \t\r\n]+ -> skip ;
+LineComment : '//' ~[\r\n]* -> skip ;
+BlockComment : '/*' .*? '*/' -> skip ;

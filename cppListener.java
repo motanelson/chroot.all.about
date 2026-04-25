@@ -27,15 +27,25 @@ public interface cppListener extends ParseTreeListener {
 	 */
 	void exitDeclaration(cppParser.DeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link cppParser#functionDeclaration}.
+	 * Enter a parse tree produced by {@link cppParser#initDeclaratorList}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunctionDeclaration(cppParser.FunctionDeclarationContext ctx);
+	void enterInitDeclaratorList(cppParser.InitDeclaratorListContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link cppParser#functionDeclaration}.
+	 * Exit a parse tree produced by {@link cppParser#initDeclaratorList}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunctionDeclaration(cppParser.FunctionDeclarationContext ctx);
+	void exitInitDeclaratorList(cppParser.InitDeclaratorListContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link cppParser#initDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void enterInitDeclarator(cppParser.InitDeclaratorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link cppParser#initDeclarator}.
+	 * @param ctx the parse tree
+	 */
+	void exitInitDeclarator(cppParser.InitDeclaratorContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link cppParser#typeSpecifier}.
 	 * @param ctx the parse tree
@@ -107,6 +117,26 @@ public interface cppListener extends ParseTreeListener {
 	 */
 	void exitClassMember(cppParser.ClassMemberContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link cppParser#constructor}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstructor(cppParser.ConstructorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link cppParser#constructor}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstructor(cppParser.ConstructorContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link cppParser#destructor}.
+	 * @param ctx the parse tree
+	 */
+	void enterDestructor(cppParser.DestructorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link cppParser#destructor}.
+	 * @param ctx the parse tree
+	 */
+	void exitDestructor(cppParser.DestructorContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link cppParser#compoundStatement}.
 	 * @param ctx the parse tree
 	 */
@@ -167,6 +197,16 @@ public interface cppListener extends ParseTreeListener {
 	 */
 	void exitJumpStatement(cppParser.JumpStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link cppParser#coutStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterCoutStatement(cppParser.CoutStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link cppParser#coutStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitCoutStatement(cppParser.CoutStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link cppParser#expression}.
 	 * @param ctx the parse tree
 	 */
@@ -186,6 +226,26 @@ public interface cppListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAssignmentExpression(cppParser.AssignmentExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link cppParser#assignmentOperator}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignmentOperator(cppParser.AssignmentOperatorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link cppParser#assignmentOperator}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignmentOperator(cppParser.AssignmentOperatorContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link cppParser#conditionalExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterConditionalExpression(cppParser.ConditionalExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link cppParser#conditionalExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitConditionalExpression(cppParser.ConditionalExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link cppParser#logicalOrExpression}.
 	 * @param ctx the parse tree
@@ -276,6 +336,16 @@ public interface cppListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPrimaryExpression(cppParser.PrimaryExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link cppParser#qualifiedIdentifier}.
+	 * @param ctx the parse tree
+	 */
+	void enterQualifiedIdentifier(cppParser.QualifiedIdentifierContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link cppParser#qualifiedIdentifier}.
+	 * @param ctx the parse tree
+	 */
+	void exitQualifiedIdentifier(cppParser.QualifiedIdentifierContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link cppParser#argumentList}.
 	 * @param ctx the parse tree
